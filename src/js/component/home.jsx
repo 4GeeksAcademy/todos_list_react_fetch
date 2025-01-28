@@ -10,7 +10,7 @@ const [toDos, setTodos] = useState([])
  
 
 
-	const handleEnter =  (e) =>{
+	const handleEnter =  async (e) =>{
 		if(e.key === "Enter"){
 		fetch("https://playground.4geeks.com/todo/todos/miguel_alves", {
 			method: "POST",
@@ -28,19 +28,24 @@ const [toDos, setTodos] = useState([])
 			if(res.ok) alert("Tarea agregada correctamente")
 		 })
 		setItem("")
-
+		 await handlerGetTodos()
 		}
-	}
+	};
 
 	const hansdleDelete = (i) => {
 		setTodos(toDos.filter((_, index) => index !== i))
 	}
 
-	const handlerGetTodos = () => {
-		fetch("https://playground.4geeks.com/todo/users/miguel_alves")
-		.then((res)=>{
-			if(res.ok) console.log(res.json())
-		})
+	const handlerGetTodos = async () => {
+		try{
+			const res = await fetch("https://playground.4geeks.com/todo/users/miguel_alves")
+		const data = await res.json()
+		if(res.ok) console.log(data)
+		} catch (error){
+			console.log(error)
+		}
+		
+		
 	}
 
 

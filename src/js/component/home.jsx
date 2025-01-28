@@ -1,26 +1,68 @@
-import React from "react";
+import React, {useState} from "react";
+import { IoMdConstruct } from "react-icons/io";
+import { PiFileCThin } from "react-icons/pi";
+import { TiDeleteOutline } from "react-icons/ti";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
 
-//create your first component
 const Home = () => {
+const [item, setItem] = useState("")
+const [toDos, setTodos] = useState([])
+ 
+
+
+	const handleEnter =  (e) =>{
+		if(e.key === "Enter"){
+		fetch("https://playground.4geeks.com/todo/todos/miguel_alves", {
+			method: "POST",
+			body: JSON.stringify({
+				"label": item,
+				"is_done": false
+			  }),
+				headers: {
+					"Content-Type": "application/json"
+				  }
+			  })
+			
+		
+		  .then((res)=> {
+			if(res.ok) alert("Tarea agregada correctamente")
+		 })
+		setItem("")
+
+		}
+	}
+
+	const hansdleDelete = (i) => {
+		setTodos(toDos.filter((_, index) => index !== i))
+	}
+
+	const handlerGetTodos = () => {
+		fetch("https://playground.4geeks.com/todo/users/miguel_alves")
+		.then((res)=>{
+			if(res.ok) console.log(res.json())
+		})
+	}
+
+
 	return (
-		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
-		</div>
-	);
+	 <div className="container">
+		<h1>Todos List</h1>
+			<div className="lista-contenedor">
+			<ul>
+				<li><input type="text" placeholder="Agregar nueva tarea" onChange={(e)=>setItem(e.target.value)} value={item} onKeyDown={(e)=>handleEnter(e)}/></li>
+				{toDos && toDos.map((item, index) =>(
+					<li key={index}>{item}<TiDeleteOutline onClick={() => hansdleDelete(index)} /></li>
+				))}
+				<li>{toDos.length} items faltantes</li>
+		        
+			</ul>
+			</div>
+		
+	 </div>
+	)
+
+	
 };
 
 export default Home;
+

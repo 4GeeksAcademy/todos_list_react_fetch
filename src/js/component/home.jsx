@@ -25,7 +25,7 @@ const [toDos, setTodos] = useState([])
 			
 		
 		  .then((res)=> {
-			if(res.ok) alert("Tarea agregada correctamente")
+			if(res.ok) console.log("Tarea agregada correctamente")
 		 })
 		setItem("")
 		 await handlerGetTodos()
@@ -38,9 +38,9 @@ const [toDos, setTodos] = useState([])
 
 	const handlerGetTodos = async () => {
 		try{
-			const res = await fetch("https://playground.4geeks.com/todo/users/miguel_alves")
+		const res = await fetch("https://playground.4geeks.com/todo/users/miguel_alves")
 		const data = await res.json()
-		if(res.ok) console.log(data)
+		if(res.ok) setTodos(data.todos)
 		} catch (error){
 			console.log(error)
 		}
@@ -56,7 +56,7 @@ const [toDos, setTodos] = useState([])
 			<ul>
 				<li><input type="text" placeholder="Agregar nueva tarea" onChange={(e)=>setItem(e.target.value)} value={item} onKeyDown={(e)=>handleEnter(e)}/></li>
 				{toDos && toDos.map((item, index) =>(
-					<li key={index}>{item}<TiDeleteOutline onClick={() => hansdleDelete(index)} /></li>
+					<li key={index}>{item.label}<TiDeleteOutline onClick={() => hansdleDelete(index)} /></li>
 				))}
 				<li>{toDos.length} items faltantes</li>
 		        

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { IoMdConstruct } from "react-icons/io";
 import { PiFileCThin } from "react-icons/pi";
 import { TiDeleteOutline } from "react-icons/ti";
@@ -12,7 +12,7 @@ const [toDos, setTodos] = useState([])
 
 	const handleEnter =  async (e) =>{
 		if(e.key === "Enter"){
-		fetch("https://playground.4geeks.com/todo/todos/miguel_alves", {
+		fetch("https://playground.4geeks.com/todo/todos/usermiguelparra", {
 			method: "POST",
 			body: JSON.stringify({
 				"label": item,
@@ -32,13 +32,18 @@ const [toDos, setTodos] = useState([])
 		}
 	};
 
-	const hansdleDelete = (i) => {
-		setTodos(toDos.filter((_, index) => index !== i))
+	const hansdleDelete = (id) => {
+		fetch("https://playground.4geeks.com/todo/todos/"+id,{
+			method: "DELETE"
+		})
+	    .then((res) => {
+			if(res.ok) console.log("tarea eliminada correctamente")
+		})
 	}
 
 	const handlerGetTodos = async () => {
 		try{
-		const res = await fetch("https://playground.4geeks.com/todo/users/miguel_alves")
+		const res = await fetch("https://playground.4geeks.com/todo/users/usermiguelparra")
 		const data = await res.json()
 		if(res.ok) setTodos(data.todos)
 		} catch (error){
@@ -47,7 +52,9 @@ const [toDos, setTodos] = useState([])
 		
 		
 	}
-
+     useEffect(() =>{
+		handlerGetTodos()
+	 },[hansdleDelete])
 
 	return (
 	 <div className="container">
@@ -56,7 +63,7 @@ const [toDos, setTodos] = useState([])
 			<ul>
 				<li><input type="text" placeholder="Agregar nueva tarea" onChange={(e)=>setItem(e.target.value)} value={item} onKeyDown={(e)=>handleEnter(e)}/></li>
 				{toDos && toDos.map((item, index) =>(
-					<li key={index}>{item.label}<TiDeleteOutline onClick={() => hansdleDelete(index)} /></li>
+					<li key={index}>{item.label}<TiDeleteOutline onClick={() => hansdleDelete(item.id)} /></li>
 				))}
 				<li>{toDos.length} items faltantes</li>
 		        
